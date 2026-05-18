@@ -1,0 +1,18 @@
+<h1>Edit <%= @resource_config.model_class.model_name.human %></h1>
+
+<%= form_with model: @record, url: resource_path(resource: params[:resource], id: @record.id), method: :patch do |f| %>
+  <% @resource_config.edit_fields.each do |field| %>
+    <div>
+      <%= f.label field.name %>
+      <%= render partial: field.partial_path, locals: { f: f, field: field, record: @record } %>
+    </div>
+  <% end %>
+  <%= f.submit "Save" %>
+<% end %>
+
+<%= link_to "Cancel", resources_path(resource: params[:resource]) %>
+
+<%= button_to "Delete",
+      resource_path(resource: params[:resource], id: @record.id),
+      method: :delete,
+      data: { confirm_message: "Delete this #{@resource_config.model_class.model_name.human}?" } %>

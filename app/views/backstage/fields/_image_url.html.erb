@@ -1,0 +1,5 @@
+<% url = record.public_send(field.name) %>
+<% if url.present? %>
+  <img src="<%= url %>" alt="" style="max-width: 200px; display: block; margin-bottom: 0.5rem;">
+<% end %>
+<%= f.text_field field.name, readonly: field.readonly? %>

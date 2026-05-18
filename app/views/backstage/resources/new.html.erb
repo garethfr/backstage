@@ -1,0 +1,13 @@
+<h1>New <%= @resource_config.model_class.model_name.human %></h1>
+
+<%= form_with model: @record, url: resources_path(resource: params[:resource]), method: :post do |f| %>
+  <% @resource_config.edit_fields.each do |field| %>
+    <div>
+      <%= f.label field.name %>
+      <%= render partial: field.partial_path, locals: { f: f, field: field, record: @record } %>
+    </div>
+  <% end %>
+  <%= f.submit "Create" %>
+<% end %>
+
+<%= link_to "Cancel", resources_path(resource: params[:resource]) %>

@@ -1,0 +1,13 @@
+<% assoc   = field.association
+   records = record.public_send(assoc.name)
+   img_col = assoc.image_col
+   resource_param = assoc.associated_class.model_name.plural %>
+<div class="backstage-thumbnails">
+  <% records.each do |r| %>
+    <figure>
+      <a href="<%= edit_resource_path(resource: resource_param, id: r.id) %>">
+        <img src="<%= r.public_send(img_col) %>" alt="">
+      </a>
+    </figure>
+  <% end %>
+</div>

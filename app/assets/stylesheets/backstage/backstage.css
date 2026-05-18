@@ -1,0 +1,5 @@
+/* Backstage admin layout */
+body { display: grid; grid-template-columns: 200px 1fr; grid-template-rows: auto 1fr; min-height: 100vh; }
+header { grid-column: 1 / -1; }
+nav { padding: 1rem; }
+main { padding: 1rem; }

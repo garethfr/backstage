@@ -1,0 +1,10 @@
+*.gem
+*.rbc
+/.bundle
+/coverage
+/doc
+/pkg
+/vendor/bundle
+Gemfile.lock
+log/
+tmp/

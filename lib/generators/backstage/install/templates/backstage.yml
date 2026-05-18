@@ -1,0 +1,16 @@
+# Backstage configuration
+#
+# List the models you want to manage:
+# models:
+#   - Article
+#   - User
+models: []
+
+# Method called on current_user to check admin access (default: is_admin?)
+# admin_user_method: is_admin?
+
+# Where to redirect non-admin users (default: /)
+# redirect_on_failure: /
+
+# Records per page (default: 25)
+# per_page: 25

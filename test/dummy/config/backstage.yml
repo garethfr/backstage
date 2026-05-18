@@ -1,0 +1,9 @@
+models:
+  - Article
+  - Tag
+
+dashboards:
+  - name: "Published"
+    model: Article
+    scope:
+      status: 1

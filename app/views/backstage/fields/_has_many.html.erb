@@ -1,0 +1,19 @@
+<% assoc    = field.association
+   records  = assoc.associated_class.all
+   col      = assoc.display_column
+   selected = record.public_send(assoc.name).map(&:id) %>
+<div data-multi-select>
+  <input type="search"
+         placeholder="Search <%= assoc.name.to_s.humanize.downcase %>…"
+         data-multi-select-search>
+  <% records.each do |r| %>
+    <label data-multi-select-item>
+      <%= check_box_tag "#{f.object_name}[#{field.name}][]",
+                        r.id,
+                        selected.include?(r.id),
+                        disabled: field.readonly? %>
+      <%= r.public_send(col) %>
+    </label>
+  <% end %>
+  <input type="hidden" name="<%= "#{f.object_name}[#{field.name}][]" %>" value="">
+</div>

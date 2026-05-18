@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Backstage</title>
+    <%= csrf_meta_tags %>
+    <%= stylesheet_link_tag "backstage/backstage", media: "all" %>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll("[data-confirm-message]").forEach(function(btn) {
+          btn.addEventListener("click", function(e) {
+            if (!window.confirm(btn.dataset.confirmMessage)) {
+              e.preventDefault()
+            }
+          })
+        })
+        document.querySelectorAll("[data-multi-select-search]").forEach(function(input) {
+          input.addEventListener("input", function() {
+            var q = input.value.toLowerCase()
+            input.closest("[data-multi-select]")
+                 .querySelectorAll("[data-multi-select-item]")
+                 .forEach(function(item) {
+                   item.hidden = q.length > 0 && !item.textContent.toLowerCase().includes(q)
+                 })
+          })
+        })
+      })
+    </script>
+  </head>
+  <body>
+    <header>
+      <%= link_to "Backstage", root_path %>
+    </header>
+    <nav>
+      <ul>
+        <% nav_resources.each do |config| %>
+          <li><%= link_to config.model_class.model_name.human.pluralize,
+                          resources_path(resource: config.model_name_param) %></li>
+        <% end %>
+      </ul>
+    </nav>
+    <main>
+      <%= yield %>
+    </main>
+    <% sidebar = defined?(@resource_config) && @resource_config&.sidebar_config
+       record  = defined?(@record) ? @record : nil %>
+    <% if sidebar&.links&.any? %>
+      <aside>
+        <ul>
+          <% sidebar.links.each do |link| %>
+            <% url = link.url_or_proc.respond_to?(:call) ? link.url_or_proc.call(record) : link.url_or_proc %>
+            <li><%= link_to link.label, url %></li>
+          <% end %>
+        </ul>
+      </aside>
+    <% end %>
+  </body>
+</html>

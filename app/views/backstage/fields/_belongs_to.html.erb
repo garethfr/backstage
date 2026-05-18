@@ -1,0 +1,7 @@
+<% assoc   = field.association
+   records = assoc.associated_class.all
+   col     = assoc.display_column %>
+<%= f.select field.name,
+             records.map { |r| [r.public_send(col), r.id] },
+             { include_blank: true },
+             disabled: field.readonly? %>

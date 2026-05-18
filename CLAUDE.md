@@ -44,7 +44,8 @@ Three layers, all host-app agnostic — they operate through `Backstage::Registr
 - Field rendering dispatches via partial path: `render field.partial_path` where `partial_path` → `"backstage/fields/_#{type}"`
 - Field partials live in `app/views/backstage/fields/` — one per type (`_string`, `_enum`, `_has_many`, `_belongs_to`, etc.)
 - Host apps can override any engine view or field partial by placing a file at the same path in their own `app/views/`
-- Layout: two-column (main + optional sidebar), Pico CSS vendored in `app/assets/stylesheets/backstage/pico.css`
+- Layout at `app/views/layouts/backstage/backstage.html.erb`, referenced as `layout "backstage/backstage"` — host apps can override by placing a file at the same path in their own `app/views/layouts/backstage/`
+- Pico CSS vendored in `app/assets/stylesheets/backstage/pico.css` (added in BACK-015)
 - Two Stimulus controllers: `multi-select` (searchable checkbox list for `has_many`) and `confirm-action` (destructive action guard)
 
 ## Key Design Decisions

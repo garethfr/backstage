@@ -1,0 +1,54 @@
+<h1><%= @resource_config.model_class.model_name.human.pluralize %></h1>
+
+<form method="get" action="">
+  <input type="search" name="q" value="<%= params[:q] %>" placeholder="Search…">
+  <button type="submit">Search</button>
+</form>
+
+<% @resource_config.index_fields.select(&:enum?).each do |field| %>
+  <nav class="enum-filters">
+    <%= link_to "All", url_for(params.permit!.except(:status, :page)) %>
+    <% field.enum_values.each do |label, value| %>
+      <%= link_to label, url_for(params.permit!.merge(field.name => value, page: nil)) %>
+    <% end %>
+  </nav>
+<% end %>
+
+<%= link_to "New #{@resource_config.model_class.model_name.human}", new_resource_path(resource: params[:resource]) %>
+
+<table>
+  <thead>
+    <tr>
+      <% @resource_config.index_fields.each do |field| %>
+        <% col = field.name.to_s
+           next_dir = (@sort == col && @dir == "asc") ? "desc" : "asc" %>
+        <th><%= link_to field.name.to_s.humanize, url_for(sort: col, dir: next_dir) %></th>
+      <% end %>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @records.each do |record| %>
+      <tr>
+        <% @resource_config.index_fields.each do |field| %>
+          <td>
+            <% if field.enum? %>
+              <%= record.public_send(field.name).to_s.humanize %>
+            <% else %>
+              <%= record.public_send(field.name) %>
+            <% end %>
+          </td>
+        <% end %>
+        <td><%= link_to "Edit", edit_resource_path(resource: params[:resource], id: record.id) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<% if @total_pages > 1 %>
+  <nav>
+    <% (1..@total_pages).each do |p| %>
+      <%= link_to p, url_for(page: p), class: (p == @page ? "current" : nil) %>
+    <% end %>
+  </nav>
+<% end %>

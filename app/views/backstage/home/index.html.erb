@@ -1,0 +1,24 @@
+<h1>Backstage</h1>
+
+<ul>
+  <% @resources.each do |r| %>
+    <li>
+      <%= link_to r[:config].model_class.model_name.human.pluralize,
+                  resources_path(resource: r[:config].model_name_param) %>
+      (<%= r[:count] %>)
+    </li>
+  <% end %>
+</ul>
+
+<% if @dashboards.any? %>
+  <h2>Dashboards</h2>
+  <ul>
+    <% @dashboards.each do |d| %>
+      <li>
+        <%= link_to d[:dashboard].name.to_s.humanize,
+                    dashboard_path(name: d[:dashboard].name) %>
+        (<%= d[:count] %>)
+      </li>
+    <% end %>
+  </ul>
+<% end %>
