@@ -20,6 +20,13 @@ class InstallGeneratorTest < Rails::Generators::TestCase
     end
   end
 
+  test "copies Claude skill file" do
+    run_generator
+    assert_file ".claude/skills/backstage-install.md" do |content|
+      assert_match "backstage-install", content
+    end
+  end
+
   test "appends mount to routes.rb" do
     FileUtils.mkdir_p(File.join(destination_root, "config"))
     File.write(File.join(destination_root, "config", "routes.rb"),
