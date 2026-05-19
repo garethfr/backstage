@@ -7,6 +7,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.4] — 2026-05-19
+
+### Fixed
+
+- Engine no longer crashes during boot when no database connection is available (`ActiveRecord::ConnectionNotEstablished`, `ActiveRecord::NoDatabaseError`); logs a warning instead
+
 ## [0.1.3] — 2026-05-19
 
 ### Fixed
