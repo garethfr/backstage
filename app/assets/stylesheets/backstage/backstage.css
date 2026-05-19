@@ -1,5 +1,10 @@
 /* Backstage admin layout */
-body { display: grid; grid-template-columns: 200px 1fr; grid-template-rows: auto 1fr; min-height: 100vh; }
+body { display: grid; grid-template-columns: 200px 1fr; grid-template-rows: auto 1fr auto; min-height: 100vh; }
 header { grid-column: 1 / -1; }
-nav { padding: 1rem; }
-main { padding: 1rem; }
+nav { padding: 1rem; grid-row: 2; grid-column: 1; }
+main { padding: 1rem; grid-row: 2; grid-column: 2; }
+aside { grid-column: 2; padding: 1rem; border-top: 1px solid var(--pico-muted-border-color); }
+
+/* Override Pico's horizontal nav list */
+nav ul { flex-direction: column; }
+nav ul li { display: block; }

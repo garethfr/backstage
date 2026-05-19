@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Backstage</title>
+    <title><%= Rails.application.class.module_parent_name.humanize %> — Backstage Admin</title>
     <%= csrf_meta_tags %>
     <%= stylesheet_link_tag "backstage/pico", media: "all" %>
     <%= stylesheet_link_tag "backstage/backstage", media: "all" %>
@@ -31,7 +31,7 @@
   </head>
   <body>
     <header>
-      <%= link_to "Backstage", root_path %>
+      <%= link_to "Admin Home", backstage.root_path %>
     </header>
     <nav>
       <ul>

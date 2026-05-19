@@ -7,6 +7,15 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.3] — 2026-05-19
+
+### Fixed
+
+- CSS grid layout: nav and main now have explicit grid positions so they render side-by-side correctly
+- Pico CSS override: nav list forced to vertical (`flex-direction: column`) instead of horizontal
+- Engine layout: page title is now dynamic (`AppName — Backstage Admin`) instead of the static "Backstage"
+- Engine layout: header home link uses `backstage.root_path` (engine-namespaced route) instead of bare `root_path`
+
 ## [0.1.2] — 2026-05-19
 
 ### Added
