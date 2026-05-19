@@ -7,6 +7,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.5] — 2026-05-19
+
+### Fixed
+
+- `Backstage.resource` no longer raises if called before `load_configuration!` has run (guards against nil registry)
+
 ## [0.1.4] — 2026-05-19
 
 ### Fixed

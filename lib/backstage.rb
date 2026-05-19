@@ -43,6 +43,7 @@ module Backstage
     end
 
     def resource(model_name)
+      return unless registry
       name = model_name.to_s
       config = registry.resource_for(name)
       yield config if block_given?
