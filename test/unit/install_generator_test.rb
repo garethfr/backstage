@@ -22,8 +22,16 @@ class InstallGeneratorTest < Rails::Generators::TestCase
 
   test "copies Claude skill file" do
     run_generator
-    assert_file ".claude/skills/backstage-install.md" do |content|
+    assert_file ".claude/skills/backstage-install/SKILL.md" do |content|
       assert_match "backstage-install", content
+    end
+  end
+
+  test "creates backstage initializer" do
+    run_generator
+    assert_file "config/initializers/backstage.rb" do |content|
+      assert_match "current_user", content
+      assert_match "Backstage::ApplicationController", content
     end
   end
 

@@ -7,6 +7,17 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.2] — 2026-05-19
+
+### Added
+
+- `backstage:install` generator now creates `config/initializers/backstage.rb` with a stub `current_user` implementation and inline examples for Devise, session, and Current attributes
+- `backstage:install` generator copies a Claude Code guided-setup skill to `.claude/skills/backstage-install/SKILL.md`
+
+### Fixed
+
+- Boot no longer crashes when a registered model's database table does not exist; the model is skipped with a warning instead
+
 ## [0.1.0] — 2026-05-18
 
 ### Added

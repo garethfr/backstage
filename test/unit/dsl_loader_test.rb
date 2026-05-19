@@ -2,6 +2,10 @@ require "test_helper"
 require "tmpdir"
 require "fileutils"
 
+class TablelessModel < ActiveRecord::Base
+  self.table_name = "backstage_nonexistent_xyz"
+end
+
 class DslLoaderTest < ActiveSupport::TestCase
   setup do
     @orig_configuration = Backstage.configuration
@@ -36,6 +40,17 @@ class DslLoaderTest < ActiveSupport::TestCase
     }
     with_dsl_root(files) do |root|
       assert_nothing_raised { Backstage.load_configuration!(root) }
+    end
+  end
+
+  test "skips model with missing table and warns instead of crashing" do
+    Dir.mktmpdir do |dir|
+      FileUtils.mkdir_p(File.join(dir, "config"))
+      yaml = "models:\n  - TablelessModel\n"
+      File.write(File.join(dir, "config", "backstage.yml"), yaml)
+      _out, err = capture_io { Backstage.load_configuration!(dir) }
+      assert_empty Backstage.registry.all_resources
+      assert_match "TablelessModel", err
     end
   end
 

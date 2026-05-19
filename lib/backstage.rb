@@ -25,7 +25,12 @@ module Backstage
         rescue NameError
           raise ConfigurationError, "config/backstage.yml: unknown model '#{name}'"
         end
-        registry.register(name, AutoDiscovery.build(model_class))
+        begin
+          registry.register(name, AutoDiscovery.build(model_class))
+        rescue ActiveRecord::StatementInvalid => e
+          warn "Backstage: skipping #{name} — #{e.message}"
+          next
+        end
       end
 
       load_dsl_files!(root)
