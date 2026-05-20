@@ -48,6 +48,18 @@ class BelongsToTest < ActionDispatch::IntegrationTest
     set_current_user(nil)
   end
 
+  test "index shows display column value instead of raw foreign key id" do
+    get "/admin/backstage_bt_posts"
+    assert_response :success
+    assert_match "Alice", response.body
+    assert_no_match ">#{@author1.id}<", response.body
+  end
+
+  test "index links belongs_to value to the related record edit page" do
+    get "/admin/backstage_bt_posts"
+    assert_match "backstage_bt_authors/#{@author1.id}/edit", response.body
+  end
+
   test "edit renders a select for belongs_to association" do
     get "/admin/backstage_bt_posts/#{@post.id}/edit"
     assert_response :success

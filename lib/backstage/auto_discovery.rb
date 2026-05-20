@@ -26,7 +26,7 @@ module Backstage
       config.display_column = detect_display_column
       fields = column_fields + enum_fields
       config.index_fields = fields
-      config.edit_fields = fields
+      config.edit_fields = fields.dup
       config
     end
 

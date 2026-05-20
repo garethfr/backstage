@@ -7,6 +7,16 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.6] — 2026-05-19
+
+### Added
+
+- `belongs_to` associations now render as a linked display name on the index page (e.g. "Alice" linking to the related record's edit page) instead of the raw foreign key integer
+
+### Fixed
+
+- `AutoDiscovery#build` now assigns independent arrays to `index_fields` and `edit_fields`; previously they shared the same object, causing edits to one to silently affect the other
+
 ## [0.1.5] — 2026-05-19
 
 ### Fixed
