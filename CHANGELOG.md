@@ -7,6 +7,13 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.7] — 2026-05-19
+
+### Changed
+
+- Pagination now shows a windowed range of 5 pages centred on the current page, plus permanent first and last page links, instead of listing every page number
+- Page links are spaced apart to prevent them running together
+
 ## [0.1.6] — 2026-05-19
 
 ### Added

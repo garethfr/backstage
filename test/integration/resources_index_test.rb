@@ -42,6 +42,24 @@ class ResourcesIndexTest < ActionDispatch::IntegrationTest
     assert_no_match first_article.title, response.body
   end
 
+  test "pagination shows first and last page links when there are many pages" do
+    per_page = Backstage.configuration.per_page
+    (per_page * 15).times { |i| Article.create!(title: "Article #{i}") }
+    get "/admin/articles", params: {page: 8}
+    assert_match "page=1", response.body
+    assert_match "page=15", response.body
+  end
+
+  test "pagination shows only 5 pages around current page" do
+    per_page = Backstage.configuration.per_page
+    (per_page * 15).times { |i| Article.create!(title: "Article #{i}") }
+    get "/admin/articles", params: {page: 8}
+    assert_match "page=6", response.body
+    assert_match "page=10", response.body
+    assert_no_match "page=5\"", response.body
+    assert_no_match "page=11\"", response.body
+  end
+
   test "search filters by display_column" do
     Article.create!(title: "Alpha")
     Article.create!(title: "Beta")
