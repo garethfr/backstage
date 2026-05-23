@@ -31,4 +31,10 @@ class ResourcesEditTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
     assert_match "edit", response.body.downcase
   end
+
+  test "update works when resource param is singular-capitalized (e.g. /admin/Article/:id)" do
+    patch "/admin/Article/#{@article.id}", params: {article: {title: "Updated via capitalized route"}}
+    assert_redirected_to "/admin/Article"
+    assert_equal "Updated via capitalized route", @article.reload.title
+  end
 end

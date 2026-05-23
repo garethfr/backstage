@@ -88,7 +88,7 @@ module Backstage
       permitted = @resource_config.edit_fields.reject(&:readonly?).map do |field|
         field.has_many? ? {field.name => []} : field.name
       end
-      params.require(params[:resource].singularize).permit(permitted)
+      params.require(@resource_config.model_class.model_name.param_key).permit(permitted)
     end
   end
 end
