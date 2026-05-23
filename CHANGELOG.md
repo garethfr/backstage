@@ -7,6 +7,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.8] — 2026-05-23
+
+### Fixed
+
+- `record_params` now uses `model_name.param_key` instead of `params[:resource].singularize` to derive the form parameter key, fixing `ActionController::ParameterMissing` when the resource URL uses a singular-capitalised name (e.g. `/admin/Resto/:id`)
+
 ## [0.1.7] — 2026-05-19
 
 ### Changed
