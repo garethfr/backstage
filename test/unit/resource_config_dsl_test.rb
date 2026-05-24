@@ -84,6 +84,22 @@ class ResourceConfigDslTest < ActiveSupport::TestCase
     end
   end
 
+  test "field new column is added to index_fields when fields has not been called" do
+    with_dsl("article.rb" => "Backstage.resource(:Article) { |c| c.field :virtual_col, as: :string }") do
+      config = Backstage.registry.resource_for("Article")
+      assert_includes config.index_fields.map(&:name), :virtual_col
+    end
+  end
+
+  test "field new column is not added to index_fields when fields has been called explicitly" do
+    dsl = "Backstage.resource(:Article) { |c| c.fields :title; c.field :virtual_col, as: :string }"
+    with_dsl("article.rb" => dsl) do
+      config = Backstage.registry.resource_for("Article")
+      assert_equal [:title], config.index_fields.map(&:name)
+      assert_includes config.edit_fields.map(&:name), :virtual_col
+    end
+  end
+
   private
 
   def with_dsl(files)

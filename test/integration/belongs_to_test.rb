@@ -79,4 +79,12 @@ class BelongsToTest < ActionDispatch::IntegrationTest
     assert_redirected_to "/admin/backstage_bt_posts"
     assert_equal @author2.id, @post.reload.backstage_bt_author_id
   end
+
+  test "belongs_to does not append to index_fields when fields has been called explicitly" do
+    post_config = Backstage::AutoDiscovery.build(BackstageBtPost)
+    post_config.fields(:title)
+    post_config.belongs_to :backstage_bt_author, display_column: :name
+    assert_equal [:title], post_config.index_fields.map(&:name)
+    assert_includes post_config.edit_fields.map(&:name), :backstage_bt_author_id
+  end
 end

@@ -7,6 +7,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.9] — 2026-05-24
+
+### Fixed
+
+- `belongs_to` and `field` no longer append to `index_fields` when `fields(...)` has already been called explicitly; previously calling `c.fields :name, :address` then `c.field :col, as: :tristate_boolean` would silently add the new field back onto the index list
+
 ## [0.1.8] — 2026-05-23
 
 ### Fixed

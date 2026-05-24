@@ -31,6 +31,7 @@ module Backstage
     attr_reader :sidebar_config
 
     def fields(*names)
+      @index_fields_explicit = true
       @index_fields = names.map { |n| find_or_build_field(n) }
     end
 
@@ -63,7 +64,7 @@ module Backstage
       @edit_fields.reject! { |f| f.name == fk_field.name }
       @index_fields.reject! { |f| f.name == fk_field.name || f.name == index_field.name }
       @edit_fields << fk_field
-      @index_fields << index_field
+      @index_fields << index_field unless @index_fields_explicit
     end
 
     def field(name, **opts)
@@ -76,7 +77,7 @@ module Backstage
       else
         new_field = Field.new(sym, type || :string, opts)
         @edit_fields << new_field
-        @index_fields << new_field
+        @index_fields << new_field unless @index_fields_explicit
       end
     end
 
