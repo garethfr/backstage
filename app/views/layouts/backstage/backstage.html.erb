@@ -46,7 +46,7 @@
     </main>
     <% sidebar = defined?(@resource_config) && @resource_config&.sidebar_config
        record  = defined?(@record) ? @record : nil %>
-    <% if sidebar&.links&.any? %>
+    <% if sidebar&.links&.any? && record&.persisted? %>
       <aside>
         <ul>
           <% sidebar.links.each do |link| %>

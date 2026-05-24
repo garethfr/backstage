@@ -50,4 +50,30 @@ class SidebarTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_no_match "<aside", response.body
   end
+
+  test "sidebar with proc link does not crash on index page where record is nil" do
+    config = Backstage::AutoDiscovery.build(Article)
+    config.sidebar do |s|
+      s.link "View", ->(record) { "/articles/#{record.id}" }
+    end
+    Backstage.registry = Backstage::Registry.new
+    Backstage.registry.register("Article", config)
+
+    get "/admin/articles"
+    assert_response :success
+    assert_no_match "<aside", response.body
+  end
+
+  test "sidebar is hidden on new record page" do
+    config = Backstage::AutoDiscovery.build(Article)
+    config.sidebar do |s|
+      s.link "View", ->(record) { "/articles/#{record.id}" }
+    end
+    Backstage.registry = Backstage::Registry.new
+    Backstage.registry.register("Article", config)
+
+    get "/admin/articles/new"
+    assert_response :success
+    assert_no_match "<aside", response.body
+  end
 end

@@ -61,4 +61,24 @@ class DashboardsTest < ActionDispatch::IntegrationTest
     get "/admin/dashboards/drafts", params: {page: 2}
     assert_response :success
   end
+
+  test "dashboard pagination shows first and last page links when there are many pages" do
+    BackstageDashArticle.delete_all
+    per_page = Backstage.configuration.per_page
+    (per_page * 15).times { |i| BackstageDashArticle.create!(title: "D #{i}", status: :draft) }
+    get "/admin/dashboards/drafts", params: {page: 8}
+    assert_match "page=1", response.body
+    assert_match "page=15", response.body
+  end
+
+  test "dashboard pagination shows only 5 pages around current page" do
+    BackstageDashArticle.delete_all
+    per_page = Backstage.configuration.per_page
+    (per_page * 15).times { |i| BackstageDashArticle.create!(title: "D #{i}", status: :draft) }
+    get "/admin/dashboards/drafts", params: {page: 8}
+    assert_match "page=6", response.body
+    assert_match "page=10", response.body
+    assert_no_match "page=5\"", response.body
+    assert_no_match "page=11\"", response.body
+  end
 end
