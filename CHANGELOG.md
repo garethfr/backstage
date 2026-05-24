@@ -7,6 +7,13 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.10] — 2026-05-25
+
+### Fixed
+
+- Dashboard pages now use the same windowed pagination (5 pages around current + first/last links) as resource index pages; pagination logic extracted into a shared `backstage/shared/_pagination` partial
+- Sidebar no longer renders on index, dashboard, or new-record pages; proc-based sidebar links were crashing with `NoMethodError` when `@record` was nil — sidebar is now guarded with `record&.persisted?`
+
 ## [0.1.9] — 2026-05-24
 
 ### Fixed
