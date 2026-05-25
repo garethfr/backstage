@@ -51,6 +51,46 @@ class SidebarTest < ActionDispatch::IntegrationTest
     assert_no_match "<aside", response.body
   end
 
+  test "sidebar renders inside main (edit view), not outside it in the layout" do
+    config = Backstage::AutoDiscovery.build(Article)
+    config.sidebar do |s|
+      s.link "Go to Articles", "/admin/articles"
+    end
+    Backstage.registry = Backstage::Registry.new
+    Backstage.registry.register("Article", config)
+
+    get "/admin/articles/#{@article.id}/edit"
+    body = response.body
+    assert body.index("<aside") < body.index("</main>"),
+      "expected <aside> to appear before </main> (i.e. inside the edit view, not the layout)"
+  end
+
+  test "sidebar links open in a new tab" do
+    config = Backstage::AutoDiscovery.build(Article)
+    config.sidebar do |s|
+      s.link "Go to Articles", "/admin/articles"
+    end
+    Backstage.registry = Backstage::Registry.new
+    Backstage.registry.register("Article", config)
+
+    get "/admin/articles/#{@article.id}/edit"
+    assert_match 'target="_blank"', response.body
+  end
+
+  test "sidebar skips links whose URL is blank" do
+    config = Backstage::AutoDiscovery.build(Article)
+    config.sidebar do |s|
+      s.link "Missing", ->(record) { "" }
+      s.link "Present", "/admin/articles"
+    end
+    Backstage.registry = Backstage::Registry.new
+    Backstage.registry.register("Article", config)
+
+    get "/admin/articles/#{@article.id}/edit"
+    assert_no_match "Missing", response.body
+    assert_match "Present", response.body
+  end
+
   test "sidebar with proc link does not crash on index page where record is nil" do
     config = Backstage::AutoDiscovery.build(Article)
     config.sidebar do |s|

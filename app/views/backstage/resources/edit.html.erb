@@ -1,18 +1,35 @@
 <h1>Edit <%= @resource_config.model_class.model_name.human %></h1>
 
-<%= form_with model: @record, url: resource_path(resource: params[:resource], id: @record.id), method: :patch do |f| %>
-  <% @resource_config.edit_fields.each do |field| %>
-    <div>
-      <%= f.label field.name %>
-      <%= render partial: field.partial_path, locals: { f: f, field: field, record: @record } %>
-    </div>
+<% sidebar = @resource_config.sidebar_config %>
+<div class="<%= sidebar&.links&.any? ? "edit-layout" : "" %>">
+  <div>
+    <%= form_with model: @record, url: resource_path(resource: params[:resource], id: @record.id), method: :patch do |f| %>
+      <% @resource_config.edit_fields.each do |field| %>
+        <div>
+          <%= f.label field.name %>
+          <%= render partial: field.partial_path, locals: { f: f, field: field, record: @record } %>
+        </div>
+      <% end %>
+      <%= f.submit "Save" %>
+    <% end %>
+
+    <%= link_to "Cancel", resources_path(resource: params[:resource]) %>
+
+    <%= button_to "Delete",
+          resource_path(resource: params[:resource], id: @record.id),
+          method: :delete,
+          data: { confirm_message: "Delete this #{@resource_config.model_class.model_name.human}?" } %>
+  </div>
+
+  <% if sidebar&.links&.any? %>
+    <aside>
+      <ul>
+        <% sidebar.links.each do |link| %>
+          <% url = link.url_or_proc.respond_to?(:call) ? link.url_or_proc.call(@record) : link.url_or_proc %>
+          <% next if url.blank? %>
+          <li><%= link_to link.label, url, target: "_blank" %></li>
+        <% end %>
+      </ul>
+    </aside>
   <% end %>
-  <%= f.submit "Save" %>
-<% end %>
-
-<%= link_to "Cancel", resources_path(resource: params[:resource]) %>
-
-<%= button_to "Delete",
-      resource_path(resource: params[:resource], id: @record.id),
-      method: :delete,
-      data: { confirm_message: "Delete this #{@resource_config.model_class.model_name.human}?" } %>
+</div>

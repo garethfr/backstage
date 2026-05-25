@@ -44,17 +44,5 @@
     <main>
       <%= yield %>
     </main>
-    <% sidebar = defined?(@resource_config) && @resource_config&.sidebar_config
-       record  = defined?(@record) ? @record : nil %>
-    <% if sidebar&.links&.any? && record&.persisted? %>
-      <aside>
-        <ul>
-          <% sidebar.links.each do |link| %>
-            <% url = link.url_or_proc.respond_to?(:call) ? link.url_or_proc.call(record) : link.url_or_proc %>
-            <li><%= link_to link.label, url %></li>
-          <% end %>
-        </ul>
-      </aside>
-    <% end %>
   </body>
 </html>
