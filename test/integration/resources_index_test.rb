@@ -60,6 +60,16 @@ class ResourcesIndexTest < ActionDispatch::IntegrationTest
     assert_no_match "page=11\"", response.body
   end
 
+  test "pagination with few pages does not render links below 1 or above total" do
+    per_page = Backstage.configuration.per_page
+    (per_page * 3).times { |i| Article.create!(title: "Article #{i}") }
+    get "/admin/articles", params: {page: 2}
+    assert_no_match "page=0", response.body
+    assert_no_match "page=-1", response.body
+    assert_no_match "page=4", response.body
+    assert_no_match "page=5", response.body
+  end
+
   test "search filters by display_column" do
     Article.create!(title: "Alpha")
     Article.create!(title: "Beta")
