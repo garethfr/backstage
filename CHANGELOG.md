@@ -7,6 +7,13 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.11] — 2026-05-25
+
+### Fixed
+
+- Pagination window no longer generates links below page 1 or above the last page when there are fewer than 6 total pages; window is clamped to the valid inner range and skipped entirely when `total_pages <= 2`
+- Sidebar moved from the layout into the edit view, rendering to the right of the form in a two-column grid; links open in a new tab (`target="_blank"`) and blank URLs (e.g. from a proc returning `""`) are skipped silently
+
 ## [0.1.10] — 2026-05-25
 
 ### Fixed
