@@ -7,6 +7,14 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.12] — 2026-05-25
+
+### Added
+
+- `c.row :field1, :field2` groups fields horizontally in a Pico CSS grid on the edit page
+- `c.section "Label" [, collapsed: true]` wraps fields in a native `<details>`/`<summary>` collapsible block (no JavaScript required); rows and individual fields can be nested inside sections
+- `c.field` called inside a `section` block moves an existing auto-discovered field into the section rather than leaving it at the top level
+
 ## [0.1.11] — 2026-05-25
 
 ### Fixed
