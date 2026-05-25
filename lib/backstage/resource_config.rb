@@ -74,11 +74,32 @@ module Backstage
       if existing
         existing.options.merge!(opts)
         existing.instance_variable_set(:@type, type.to_sym) if type
+        if @current_target
+          @edit_fields.reject! { |f| f.name == sym }
+          @current_target << existing
+        end
       else
         new_field = Field.new(sym, type || :string, opts)
-        @edit_fields << new_field
-        @index_fields << new_field unless @index_fields_explicit
+        (@current_target || @edit_fields) << new_field
+        @index_fields << new_field unless @index_fields_explicit || @current_target
       end
+    end
+
+    def row(*names)
+      syms = names.map(&:to_sym)
+      sub = syms.map { |n| find_field(n) || Field.new(n, :string) }
+      @edit_fields.reject! { |f| syms.include?(f.name) }
+      row_field = Field.new(:"row_#{names.first}", :row, sub_fields: sub)
+      (@current_target || @edit_fields) << row_field
+    end
+
+    def section(heading, **opts)
+      section_field = Field.new(:"section_#{heading.parameterize}", :section,
+        heading: heading, sub_fields: [], **opts)
+      @current_target = section_field.sub_fields
+      yield if block_given?
+      @current_target = nil
+      @edit_fields << section_field
     end
 
     private

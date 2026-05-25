@@ -1,0 +1,13 @@
+<details <%= "open" unless field.collapsed? %>>
+  <summary><strong><%= field.heading %></strong></summary>
+  <% field.sub_fields.each do |sub| %>
+    <% if sub.container? %>
+      <%= render partial: sub.partial_path, locals: { f: f, field: sub, record: @record } %>
+    <% else %>
+      <div>
+        <%= f.label sub.name %>
+        <%= render partial: sub.partial_path, locals: { f: f, field: sub, record: @record } %>
+      </div>
+    <% end %>
+  <% end %>
+</details>

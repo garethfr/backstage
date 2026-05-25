@@ -1,0 +1,8 @@
+<div class="grid">
+  <% field.sub_fields.each do |sub| %>
+    <div>
+      <%= f.label sub.name %>
+      <%= render partial: sub.partial_path, locals: { f: f, field: sub, record: @record } %>
+    </div>
+  <% end %>
+</div>

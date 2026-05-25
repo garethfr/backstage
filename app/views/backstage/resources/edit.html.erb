@@ -5,10 +5,14 @@
   <div>
     <%= form_with model: @record, url: resource_path(resource: params[:resource], id: @record.id), method: :patch do |f| %>
       <% @resource_config.edit_fields.each do |field| %>
-        <div>
-          <%= f.label field.name %>
+        <% if field.container? %>
           <%= render partial: field.partial_path, locals: { f: f, field: field, record: @record } %>
-        </div>
+        <% else %>
+          <div>
+            <%= f.label field.name %>
+            <%= render partial: field.partial_path, locals: { f: f, field: field, record: @record } %>
+          </div>
+        <% end %>
       <% end %>
       <%= f.submit "Save" %>
     <% end %>

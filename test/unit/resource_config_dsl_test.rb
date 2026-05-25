@@ -100,6 +100,66 @@ class ResourceConfigDslTest < ActiveSupport::TestCase
     end
   end
 
+  # --- row DSL ---
+
+  test "row creates a container field with named sub_fields" do
+    with_dsl("article.rb" => "Backstage.resource(:Article) { |c| c.row :title, :body }") do
+      config = Backstage.registry.resource_for("Article")
+      row = config.edit_fields.find(&:row?)
+      assert_not_nil row
+      assert_equal [:title, :body], row.sub_fields.map(&:name)
+    end
+  end
+
+  test "row removes constituent fields from top-level edit_fields" do
+    with_dsl("article.rb" => "Backstage.resource(:Article) { |c| c.row :title, :body }") do
+      config = Backstage.registry.resource_for("Article")
+      top_names = config.edit_fields.reject(&:row?).map(&:name)
+      assert_not_includes top_names, :title
+      assert_not_includes top_names, :body
+    end
+  end
+
+  # --- section DSL ---
+
+  test "section wraps block contents into a collapsible container" do
+    dsl = "Backstage.resource(:Article) { |c| c.section('Details') { c.row :title, :body } }"
+    with_dsl("article.rb" => dsl) do
+      config = Backstage.registry.resource_for("Article")
+      section = config.edit_fields.find(&:section?)
+      assert_not_nil section
+      assert_equal "Details", section.heading
+      assert section.sub_fields.any?(&:row?)
+    end
+  end
+
+  test "section with collapsed: true marks the section as collapsed" do
+    dsl = "Backstage.resource(:Article) { |c| c.section('Details', collapsed: true) { c.field :title } }"
+    with_dsl("article.rb" => dsl) do
+      config = Backstage.registry.resource_for("Article")
+      assert config.edit_fields.find(&:section?).collapsed?
+    end
+  end
+
+  test "section without collapsed option defaults to not collapsed" do
+    dsl = "Backstage.resource(:Article) { |c| c.section('Details') { c.field :title } }"
+    with_dsl("article.rb" => dsl) do
+      config = Backstage.registry.resource_for("Article")
+      assert_not config.edit_fields.find(&:section?).collapsed?
+    end
+  end
+
+  test "field for existing field inside section moves it to section sub_fields" do
+    dsl = "Backstage.resource(:Article) { |c| c.section('Details') { c.field :title, readonly: true } }"
+    with_dsl("article.rb" => dsl) do
+      config = Backstage.registry.resource_for("Article")
+      section = config.edit_fields.find(&:section?)
+      assert_includes section.sub_fields.map(&:name), :title
+      assert_not_includes config.edit_fields.reject(&:section?).map(&:name), :title
+      assert section.sub_fields.find { |f| f.name == :title }.readonly?
+    end
+  end
+
   private
 
   def with_dsl(files)

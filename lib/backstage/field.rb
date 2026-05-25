@@ -32,6 +32,30 @@ module Backstage
       type == :has_many
     end
 
+    def row?
+      type == :row
+    end
+
+    def section?
+      type == :section
+    end
+
+    def container?
+      row? || section?
+    end
+
+    def sub_fields
+      options[:sub_fields] || []
+    end
+
+    def heading
+      options[:heading]
+    end
+
+    def collapsed?
+      options.fetch(:collapsed, false)
+    end
+
     def association
       options[:association]
     end

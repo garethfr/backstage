@@ -95,7 +95,19 @@ Pushing the tag triggers the GitHub Actions publish workflow (`.github/workflows
 
 ---
 
-## Step 8 — Verify
+## Step 8 — Create GitHub release
+
+Use the CHANGELOG entry for this version as the release notes:
+
+```bash
+gh release create vNEW_VERSION --title "vNEW_VERSION" --notes "CHANGELOG_NOTES"
+```
+
+Confirm with the user before creating.
+
+---
+
+## Step 9 — Verify
 
 - Check the Actions tab on GitHub to confirm the publish workflow ran successfully.
 - Confirm the new version appears at https://rubygems.org/gems/backstage.
@@ -107,5 +119,6 @@ Pushing the tag triggers the GitHub Actions publish workflow (`.github/workflows
 After completion, print:
 - New version number
 - Tag pushed
+- GitHub release URL (returned by `gh release create`)
 - Link to the GitHub Actions run (if available from `gh run list --workflow=publish.yml --limit=1`)
 - Any manual steps remaining (e.g. if the publish workflow is not configured)

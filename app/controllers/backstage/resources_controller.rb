@@ -85,10 +85,21 @@ module Backstage
     end
 
     def record_params
-      permitted = @resource_config.edit_fields.reject(&:readonly?).map do |field|
-        field.has_many? ? {field.name => []} : field.name
+      params
+        .require(@resource_config.model_class.model_name.param_key)
+        .permit(permitted_field_names(@resource_config.edit_fields))
+    end
+
+    def permitted_field_names(fields)
+      fields.reject(&:readonly?).flat_map do |field|
+        if field.container?
+          permitted_field_names(field.sub_fields)
+        elsif field.has_many?
+          [{field.name => []}]
+        else
+          [field.name]
+        end
       end
-      params.require(@resource_config.model_class.model_name.param_key).permit(permitted)
     end
   end
 end
