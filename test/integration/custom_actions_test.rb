@@ -30,4 +30,20 @@ class CustomActionsTest < ActionDispatch::IntegrationTest
     post "/admin/ghosts/1/publish"
     assert_response :not_found
   end
+
+  test "inherited CRUD action cannot be dispatched via custom action route even with a custom controller" do
+    # destroy is inherited on ArticlesController but not defined directly on it —
+    # instance_methods(false) must exclude it so it cannot be called via the custom action route
+    post "/admin/articles/#{@article.id}/destroy"
+    assert_response :internal_server_error
+    assert Article.exists?(@article.id), "record must not be deleted via the custom action route"
+  end
+
+  test "custom action route returns 500 when no host subclass exists for the resource" do
+    tag = Tag.create!(name: "release-test-tag")
+    post "/admin/tags/#{tag.id}/some_custom_action"
+    assert_response :internal_server_error
+  ensure
+    Tag.delete_all
+  end
 end
