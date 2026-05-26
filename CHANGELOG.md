@@ -7,6 +7,14 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.14] — 2026-05-26
+
+### Fixed
+
+- `ActionsController` no longer falls back to `Backstage::ResourcesController` when no custom controller exists — raises `NotImplementedError` instead of silently dispatching inherited CRUD actions
+- Custom action dispatch now uses `method_defined?(name, false)` so only actions defined directly on the host subclass are callable; inherited methods (`index`, `create`, `update`, `destroy`, etc.) are blocked
+- Gemspec `homepage` corrected to point to the right repository
+
 ## [0.1.13] — 2026-05-26
 
 ### Added
