@@ -6,10 +6,11 @@
 </form>
 
 <% @resource_config.index_fields.select(&:enum?).each do |field| %>
+  <% safe_params = params.permit(:q, :sort, :dir, :page, field.name) %>
   <nav class="enum-filters">
-    <%= link_to "All", url_for(params.permit!.except(:status, :page)) %>
+    <%= link_to "All", url_for(safe_params.except(field.name.to_s, "page")) %>
     <% field.enum_values.each do |label, value| %>
-      <%= link_to label, url_for(params.permit!.merge(field.name => value, page: nil)) %>
+      <%= link_to label, url_for(safe_params.merge(field.name => value, page: nil)) %>
     <% end %>
   </nav>
 <% end %>

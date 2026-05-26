@@ -1,7 +1,6 @@
 module Backstage
   class ResourceConfig
-    attr_accessor :model_class, :index_fields, :edit_fields,
-      :associations, :sidebar_links, :custom_actions, :excluded_columns
+    attr_accessor :model_class, :index_fields, :edit_fields, :associations
     attr_writer :display_column
 
     def initialize(model_class)
@@ -9,9 +8,6 @@ module Backstage
       @index_fields = []
       @edit_fields = []
       @associations = []
-      @sidebar_links = []
-      @custom_actions = []
-      @excluded_columns = []
     end
 
     def display_column(value = nil)
@@ -56,6 +52,14 @@ module Backstage
       end
     end
 
+    def nested(name, fields:, readonly_fields: [])
+      field_obj = Field.new(name.to_sym, :nested,
+        nested_fields: Array(fields).map(&:to_sym),
+        nested_readonly_fields: Array(readonly_fields).map(&:to_sym))
+      @edit_fields.reject! { |f| f.name == field_obj.name }
+      (@current_target || @edit_fields) << field_obj
+    end
+
     def belongs_to(name, **opts)
       assoc = AssociationConfig.new(name, :belongs_to, opts)
       @associations << assoc
@@ -98,14 +102,23 @@ module Backstage
         heading: heading, sub_fields: [], **opts)
       @current_target = section_field.sub_fields
       yield if block_given?
-      @current_target = nil
       @edit_fields << section_field
+    ensure
+      @current_target = nil
     end
 
     private
 
     def find_field(name)
-      (@index_fields + @edit_fields).uniq.find { |f| f.name == name }
+      all_fields = @index_fields + @edit_fields
+      all_fields.uniq.each do |f|
+        return f if f.name == name
+        if f.container?
+          found = f.sub_fields.find { |sf| sf.name == name }
+          return found if found
+        end
+      end
+      nil
     end
 
     def find_or_build_field(name)

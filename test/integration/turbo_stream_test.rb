@@ -11,6 +11,11 @@ module Backstage
       @record = Article.find(params[:id])
       respond_with_success("Flagged successfully")
     end
+
+    def xss_action
+      @record = Article.find(params[:id])
+      respond_with_success("<script>alert('xss')</script>")
+    end
   end
 end
 
@@ -38,5 +43,13 @@ class TurboStreamTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_match "turbo-stream", response.body
     assert_match "Flagged successfully", response.body
+  end
+
+  test "respond_with_success escapes HTML in message" do
+    post "/admin/articles/#{@article.id}/xss_action",
+      headers: {"Accept" => "text/vnd.turbo-stream.html"}
+    assert_response :success
+    assert_no_match "<script>", response.body
+    assert_match "&lt;script&gt;", response.body
   end
 end

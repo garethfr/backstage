@@ -1,0 +1,30 @@
+<% records = record.public_send(field.name) %>
+<% if records.any? %>
+  <table>
+    <thead>
+      <tr>
+        <% field.nested_fields.each do |col| %>
+          <th><%= col.to_s.humanize %></th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <%= f.fields_for field.name do |nf| %>
+        <%= nf.hidden_field :id %>
+        <tr>
+          <% field.nested_fields.each do |col| %>
+            <td>
+              <% if field.nested_readonly_fields.include?(col) %>
+                <%= nf.object.public_send(col) %>
+              <% else %>
+                <%= nf.text_field col %>
+              <% end %>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <em>None</em>
+<% end %>

@@ -32,6 +32,18 @@ module Backstage
       type == :has_many
     end
 
+    def nested?
+      type == :nested
+    end
+
+    def nested_fields
+      options[:nested_fields] || []
+    end
+
+    def nested_readonly_fields
+      options[:nested_readonly_fields] || []
+    end
+
     def row?
       type == :row
     end

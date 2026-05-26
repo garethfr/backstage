@@ -13,7 +13,25 @@ class RowSectionTest < ActionDispatch::IntegrationTest
     set_current_user(nil)
   end
 
-  # --- row rendering ---
+  # --- new page container rendering ---
+
+  test "new page renders row without a spurious container label" do
+    build_config { |c| c.row(:title, :body) }
+    get "/admin/articles/new"
+    assert_response :success
+    assert_match 'class="grid"', response.body
+    assert_no_match 'for="article_row_', response.body
+  end
+
+  test "new page renders section without a spurious container label" do
+    build_config { |c| c.section("Content") { c.field(:title) } }
+    get "/admin/articles/new"
+    assert_response :success
+    assert_match "<details", response.body
+    assert_no_match 'for="article_section_', response.body
+  end
+
+  # --- edit page row rendering ---
 
   test "edit page renders row fields inside a grid div" do
     build_config { |c| c.row(:title, :body) }

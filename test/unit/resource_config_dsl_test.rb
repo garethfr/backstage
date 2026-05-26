@@ -149,6 +149,27 @@ class ResourceConfigDslTest < ActiveSupport::TestCase
     end
   end
 
+  test "section resets current_target even when block raises" do
+    config = Backstage::AutoDiscovery.build(Article)
+    assert_raises(RuntimeError) do
+      config.section("Boom") { raise "oops" }
+    end
+    # A subsequent field call must go to top-level edit_fields, not a stale target
+    config.field(:title, readonly: true)
+    top_level = config.edit_fields.reject(&:section?)
+    assert_includes top_level.map(&:name), :title
+  end
+
+  test "find_field searches inside container sub_fields" do
+    config = Backstage::AutoDiscovery.build(Article)
+    config.section("Details") { config.field(:title, readonly: true) }
+    # Calling section again with the same field must find the existing one in sub_fields
+    # and not add a duplicate top-level field
+    title_fields = (config.edit_fields + config.edit_fields.flat_map(&:sub_fields))
+      .select { |f| f.name == :title }
+    assert_equal 1, title_fields.count
+  end
+
   test "field for existing field inside section moves it to section sub_fields" do
     dsl = "Backstage.resource(:Article) { |c| c.section('Details') { c.field :title, readonly: true } }"
     with_dsl("article.rb" => dsl) do

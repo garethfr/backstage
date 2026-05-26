@@ -12,6 +12,8 @@ class AutoDiscoveryTest < ActiveSupport::TestCase
       t.date :published_on
       t.datetime :processed_at
       t.integer :status
+      t.decimal :price, precision: 10, scale: 2
+      t.float :rating
       t.timestamps
     end
   end
@@ -67,6 +69,18 @@ class AutoDiscoveryTest < ActiveSupport::TestCase
     field = field_named(:processed_at)
     assert_not_nil field
     assert_equal :datetime, field.type
+  end
+
+  test "discovers decimal columns as :decimal" do
+    field = field_named(:price)
+    assert_not_nil field
+    assert_equal :decimal, field.type
+  end
+
+  test "discovers float columns as :decimal" do
+    field = field_named(:rating)
+    assert_not_nil field
+    assert_equal :decimal, field.type
   end
 
   test "excludes system columns (id, created_at, updated_at) from index_fields" do

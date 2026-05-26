@@ -22,7 +22,8 @@ module Backstage
       if params[:sort].present? && valid_columns.include?(params[:sort])
         @sort = params[:sort]
         @dir = (params[:dir] == "desc") ? "desc" : "asc"
-        scope = scope.order("#{@sort} #{@dir}")
+        arel_col = @resource_config.model_class.arel_table[@sort]
+        scope = scope.order((@dir == "desc") ? arel_col.desc : arel_col.asc)
       end
 
       @total_pages = [(scope.count.to_f / per_page).ceil, 1].max
@@ -78,8 +79,9 @@ module Backstage
     end
 
     def respond_with_success(message)
+      safe_message = ERB::Util.html_escape(message)
       render html: %(<turbo-stream action="prepend" target="flash">
-        <template><p class="notice">#{message}</p></template>
+        <template><p class="notice">#{safe_message}</p></template>
       </turbo-stream>).html_safe,
         content_type: "text/vnd.turbo-stream.html"
     end
@@ -96,6 +98,9 @@ module Backstage
           permitted_field_names(field.sub_fields)
         elsif field.has_many?
           [{field.name => []}]
+        elsif field.nested?
+          writable = field.nested_fields - field.nested_readonly_fields
+          [{"#{field.name}_attributes": [:id, *writable]}]
         else
           [field.name]
         end

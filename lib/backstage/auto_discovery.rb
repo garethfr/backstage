@@ -6,8 +6,8 @@ module Backstage
       string: :string,
       text: :text,
       integer: :integer,
-      decimal: :integer,
-      float: :integer,
+      decimal: :decimal,
+      float: :decimal,
       boolean: :boolean,
       date: :date,
       datetime: :datetime

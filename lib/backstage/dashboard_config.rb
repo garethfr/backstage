@@ -3,8 +3,8 @@ module Backstage
     attr_reader :name, :model_name, :scope
 
     def initialize(hash)
-      @name = hash["name"]
-      @model_name = hash["model"]
+      @name = hash["name"] or raise ArgumentError, "Dashboard config missing 'name'"
+      @model_name = hash["model"] or raise ArgumentError, "Dashboard config missing 'model'"
       @scope = hash["scope"] || {}
     end
 

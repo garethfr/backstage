@@ -7,6 +7,25 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.13] — 2026-05-26
+
+### Added
+
+- `c.nested :assoc, fields: [...]` DSL for `accepts_nested_attributes_for` associations — renders existing nested records as editable rows
+
+### Fixed
+
+- SQL injection: sort column now uses Arel table quoting instead of raw string interpolation
+- XSS: `respond_with_success` now HTML-escapes the message argument before rendering
+- `new.html.erb` now respects container fields (row/section) — previously rendered a spurious wrapper `<div>` and label around each
+- `decimal` and `float` column types now map to `:decimal` instead of `:integer`; a new `_decimal` partial renders them with `step: "any"`
+- `section` block now uses `ensure` to reset `@current_target`, preventing a stale target if the block raises
+- `find_field` now searches inside container `sub_fields`, preventing duplicate fields when re-specifying a field already moved into a section
+- `DashboardConfig` now raises `ArgumentError` at initialisation if `name` or `model` is missing from the YAML hash
+- `params.permit!` in `index.html.erb` replaced with explicit param slice
+- Edit page no longer renders an empty `class=""` attribute when no sidebar is present
+- Removed unused `sidebar_links`, `custom_actions`, and `excluded_columns` attributes from `ResourceConfig`
+
 ## [0.1.12] — 2026-05-25
 
 ### Added
