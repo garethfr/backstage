@@ -7,6 +7,17 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.15] — 2026-05-27
+
+### Added
+
+- `c.nested :assoc, fields: [...]` DSL renders existing `has_many` records as an inline editable table using `accepts_nested_attributes_for`
+- Nested rows include a destroy button (×) and a `_destroy` hidden field; clicking hides the row and marks it for deletion on save
+- A blank add row is always rendered at the bottom of the nested table for creating new records
+- `image_url` fields on index and dashboard tables now render as `<img>` tags instead of raw URLs
+- `belongs_to` fields now render correctly on dashboard tables (was missing)
+- Shared `backstage/shared/_cell` partial extracted for consistent field rendering across index and dashboard views
+
 ## [0.1.14] — 2026-05-26
 
 ### Fixed
