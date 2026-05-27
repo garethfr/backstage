@@ -26,6 +26,13 @@
                  })
           })
         })
+        document.querySelectorAll("[data-nested-destroy]").forEach(function(btn) {
+          btn.addEventListener("click", function() {
+            var row = btn.closest("tr")
+            row.querySelector("[data-nested-destroy-flag]").value = "1"
+            row.hidden = true
+          })
+        })
       })
     </script>
   </head>

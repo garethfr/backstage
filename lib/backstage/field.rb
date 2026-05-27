@@ -36,6 +36,10 @@ module Backstage
       type == :nested
     end
 
+    def image_url?
+      type == :image_url
+    end
+
     def nested_fields
       options[:nested_fields] || []
     end

@@ -13,13 +13,7 @@
     <% @records.each do |record| %>
       <tr id="<%= @resource_config.model_name_param %>_<%= record.id %>_row">
         <% @resource_config.index_fields.each do |field| %>
-          <td>
-            <% if field.enum? %>
-              <%= record.public_send(field.name).to_s.humanize %>
-            <% else %>
-              <%= record.public_send(field.name) %>
-            <% end %>
-          </td>
+          <td><%= render "backstage/shared/cell", field: field, record: record %></td>
         <% end %>
         <td><%= link_to "Edit", edit_resource_path(resource: @resource_config.model_name_param, id: record.id) %></td>
       </tr>

@@ -1,0 +1,17 @@
+<% if field.image_url? %>
+  <% url = record.public_send(field.name) %>
+  <% if url.present? %>
+    <%= image_tag url, style: "max-height:60px;" %>
+  <% end %>
+<% elsif field.enum? %>
+  <%= record.public_send(field.name).to_s.humanize %>
+<% elsif field.belongs_to? %>
+  <% related = record.public_send(field.association.name)
+     col     = field.association.display_column
+     label   = related&.public_send(col) %>
+  <% if related %>
+    <%= link_to label, edit_resource_path(resource: related.class.model_name.plural, id: related.id) %>
+  <% end %>
+<% else %>
+  <%= record.public_send(field.name) %>
+<% end %>

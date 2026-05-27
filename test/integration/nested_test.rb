@@ -21,7 +21,9 @@ end
 class BackstageNestedArticle < ApplicationRecord
   self.table_name = "backstage_nested_articles"
   has_many :backstage_nested_extras, dependent: :destroy
-  accepts_nested_attributes_for :backstage_nested_extras
+  accepts_nested_attributes_for :backstage_nested_extras,
+    allow_destroy: true,
+    reject_if: :all_blank
 end
 
 class NestedTest < ActionDispatch::IntegrationTest
@@ -92,5 +94,57 @@ class NestedTest < ActionDispatch::IntegrationTest
         }
       }
     assert_equal "source", @extra1.reload.key
+  end
+
+  # --- delete ---
+
+  test "edit page renders a destroy button for each nested row" do
+    get "/admin/backstage_nested_articles/#{@article.id}/edit"
+    assert_match "data-nested-destroy", response.body
+  end
+
+  test "edit page renders a hidden _destroy field for each nested row" do
+    get "/admin/backstage_nested_articles/#{@article.id}/edit"
+    assert_match "_destroy", response.body
+  end
+
+  test "_destroy is permitted and destroys the nested record when set to 1" do
+    patch "/admin/backstage_nested_articles/#{@article.id}",
+      params: {
+        backstage_nested_article: {
+          backstage_nested_extras_attributes: {
+            "0" => {id: @extra1.id, _destroy: "1"}
+          }
+        }
+      }
+    assert_redirected_to "/admin/backstage_nested_articles"
+    assert_not BackstageNestedExtra.exists?(@extra1.id)
+  end
+
+  # --- add new ---
+
+  test "edit page renders an empty add row" do
+    get "/admin/backstage_nested_articles/#{@article.id}/edit"
+    # Should have at least one input with no value for adding a new record
+    assert_match "data-nested-new-row", response.body
+  end
+
+  test "submitting the empty add row with values creates a new nested record" do
+    # Use a config with no readonly_fields so both key and value are writable
+    config = Backstage::AutoDiscovery.build(BackstageNestedArticle)
+    config.nested :backstage_nested_extras, fields: [:key, :value]
+    Backstage.registry = Backstage::Registry.new
+    Backstage.registry.register("BackstageNestedArticle", config)
+
+    assert_difference "BackstageNestedExtra.count", 1 do
+      patch "/admin/backstage_nested_articles/#{@article.id}",
+        params: {
+          backstage_nested_article: {
+            backstage_nested_extras_attributes: {
+              "new" => {key: "color", value: "red"}
+            }
+          }
+        }
+    end
   end
 end

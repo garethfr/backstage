@@ -32,20 +32,7 @@
     <% @records.each do |record| %>
       <tr>
         <% @resource_config.index_fields.each do |field| %>
-          <td>
-            <% if field.enum? %>
-              <%= record.public_send(field.name).to_s.humanize %>
-            <% elsif field.belongs_to? %>
-              <% related = record.public_send(field.association.name)
-                 col     = field.association.display_column
-                 label   = related&.public_send(col) %>
-              <% if related %>
-                <%= link_to label, edit_resource_path(resource: related.class.model_name.plural, id: related.id) %>
-              <% end %>
-            <% else %>
-              <%= record.public_send(field.name) %>
-            <% end %>
-          </td>
+          <td><%= render "backstage/shared/cell", field: field, record: record %></td>
         <% end %>
         <td><%= link_to "Edit", edit_resource_path(resource: params[:resource], id: record.id) %></td>
       </tr>

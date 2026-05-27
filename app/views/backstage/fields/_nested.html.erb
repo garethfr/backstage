@@ -1,30 +1,39 @@
 <% records = record.public_send(field.name) %>
-<% if records.any? %>
-  <table>
-    <thead>
-      <tr>
-        <% field.nested_fields.each do |col| %>
-          <th><%= col.to_s.humanize %></th>
-        <% end %>
-      </tr>
-    </thead>
-    <tbody>
-      <%= f.fields_for field.name do |nf| %>
-        <%= nf.hidden_field :id %>
-        <tr>
-          <% field.nested_fields.each do |col| %>
-            <td>
-              <% if field.nested_readonly_fields.include?(col) %>
-                <%= nf.object.public_send(col) %>
-              <% else %>
-                <%= nf.text_field col %>
-              <% end %>
-            </td>
-          <% end %>
-        </tr>
+<table>
+  <thead>
+    <tr>
+      <% field.nested_fields.each do |col| %>
+        <th><%= col.to_s.humanize %></th>
       <% end %>
-    </tbody>
-  </table>
-<% else %>
-  <em>None</em>
-<% end %>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= f.fields_for field.name do |nf| %>
+      <tr>
+        <%= nf.hidden_field :id %>
+        <%= nf.hidden_field :_destroy, value: "0", data: {nested_destroy_flag: true} %>
+        <% field.nested_fields.each do |col| %>
+          <td>
+            <% if field.nested_readonly_fields.include?(col) %>
+              <%= nf.object.public_send(col) %>
+            <% else %>
+              <%= nf.text_field col %>
+            <% end %>
+          </td>
+        <% end %>
+        <td>
+          <button type="button" data-nested-destroy aria-label="Remove">&times;</button>
+        </td>
+      </tr>
+    <% end %>
+    <%= f.fields_for field.name, records.klass.new do |nf| %>
+      <tr data-nested-new-row>
+        <% field.nested_fields.reject { |col| field.nested_readonly_fields.include?(col) }.each do |col| %>
+          <td><%= nf.text_field col %></td>
+        <% end %>
+        <td></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
