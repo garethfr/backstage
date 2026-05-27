@@ -141,7 +141,7 @@ class NestedTest < ActionDispatch::IntegrationTest
         params: {
           backstage_nested_article: {
             backstage_nested_extras_attributes: {
-              "new" => {key: "color", value: "red"}
+              "2" => {key: "color", value: "red"}
             }
           }
         }

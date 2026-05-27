@@ -6,7 +6,7 @@ require "test_helper"
 ActiveRecord::Schema.define do
   create_table :backstage_cell_photos, force: true do |t|
     t.integer :backstage_cell_resto_id
-    t.string  :thumb_url
+    t.string :thumb_url
     t.timestamps
   end
   create_table :backstage_cell_restos, force: true do |t|
@@ -48,7 +48,7 @@ class IndexCellTest < ActionDispatch::IntegrationTest
     dashboard = Backstage::DashboardConfig.new(
       "name" => "unapproved",
       "model" => "BackstageCellResto",
-      "scope" => { "approved" => false }
+      "scope" => {"approved" => false}
     )
 
     @orig_registry = Backstage.registry
@@ -69,7 +69,7 @@ class IndexCellTest < ActionDispatch::IntegrationTest
     get "/admin/backstage_cell_photos"
     assert_response :success
     assert_match "Le Bistro", response.body
-    assert_match 'href=', response.body
+    assert_match "href=", response.body
   end
 
   test "index renders image_url as an img tag" do
@@ -86,7 +86,7 @@ class IndexCellTest < ActionDispatch::IntegrationTest
     get "/admin/dashboards/unapproved"
     assert_response :success
     assert_match "Le Bistro", response.body
-    assert_match 'href=', response.body
+    assert_match "href=", response.body
   end
 
   test "dashboard renders image_url as an img tag" do
@@ -99,7 +99,7 @@ class IndexCellTest < ActionDispatch::IntegrationTest
   end
 
   test "dashboard applies scope filter correctly" do
-    approved_resto = BackstageCellResto.create!(name: "Approved Place", approved: true)
+    BackstageCellResto.create!(name: "Approved Place", approved: true)
     get "/admin/dashboards/unapproved"
     assert_match "Le Bistro", response.body
     assert_no_match "Approved Place", response.body

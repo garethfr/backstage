@@ -27,7 +27,7 @@
         </td>
       </tr>
     <% end %>
-    <%= f.fields_for field.name, records.klass.new do |nf| %>
+    <%= f.fields_for field.name, records.klass.new, child_index: records.size do |nf| %>
       <tr data-nested-new-row>
         <% field.nested_fields.reject { |col| field.nested_readonly_fields.include?(col) }.each do |col| %>
           <td><%= nf.text_field col %></td>
