@@ -27,13 +27,29 @@
         </td>
       </tr>
     <% end %>
-    <%= f.fields_for field.name, records.klass.new, child_index: records.size do |nf| %>
-      <tr data-nested-new-row>
-        <% field.nested_fields.reject { |col| field.nested_readonly_fields.include?(col) }.each do |col| %>
-          <td><%= nf.text_field col %></td>
+    <%# Template is not part of the DOM — never submitted until the user clicks Add %>
+    <template data-nested-template data-next-index="<%= records.size %>">
+      <tr>
+        <% field.nested_fields.each do |col| %>
+          <td>
+            <input type="text"
+                   name="<%= "#{f.object_name}[#{field.name}_attributes][__INDEX__][#{col}]" %>"
+                   value="" />
+          </td>
         <% end %>
-        <td></td>
+        <td>
+          <input type="hidden"
+                 name="<%= "#{f.object_name}[#{field.name}_attributes][__INDEX__][_destroy]" %>"
+                 value="0"
+                 data-nested-destroy-flag="true" />
+          <button type="button" data-nested-destroy aria-label="Remove">&times;</button>
+        </td>
       </tr>
-    <% end %>
+    </template>
+    <tr>
+      <td colspan="<%= field.nested_fields.size + 1 %>">
+        <button type="button" data-nested-add>+ Add</button>
+      </td>
+    </tr>
   </tbody>
 </table>

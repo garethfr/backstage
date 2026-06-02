@@ -63,7 +63,7 @@ module Backstage
     def belongs_to(name, **opts)
       assoc = AssociationConfig.new(name, :belongs_to, opts)
       @associations << assoc
-      fk_field = Field.new(assoc.foreign_key, :belongs_to, association: assoc)
+      fk_field = Field.new(assoc.foreign_key, :belongs_to, association: assoc, readonly: opts[:readonly])
       index_field = Field.new(name.to_sym, :belongs_to, association: assoc)
       @edit_fields.reject! { |f| f.name == fk_field.name }
       @index_fields.reject! { |f| f.name == fk_field.name || f.name == index_field.name }

@@ -99,8 +99,7 @@ module Backstage
         elsif field.has_many?
           [{field.name => []}]
         elsif field.nested?
-          writable = field.nested_fields - field.nested_readonly_fields
-          [{"#{field.name}_attributes": [:id, :_destroy, *writable]}]
+          [{"#{field.name}_attributes": [:id, :_destroy, *field.nested_fields]}]
         else
           [field.name]
         end

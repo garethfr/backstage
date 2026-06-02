@@ -84,16 +84,10 @@ class NestedTest < ActionDispatch::IntegrationTest
     assert_equal "mobile", @extra1.reload.value
   end
 
-  test "readonly fields are not saved even if submitted" do
-    patch "/admin/backstage_nested_articles/#{@article.id}",
-      params: {
-        backstage_nested_article: {
-          backstage_nested_extras_attributes: {
-            "0" => {id: @extra1.id, key: "hacked", value: "mobile"}
-          }
-        }
-      }
-    assert_equal "source", @extra1.reload.key
+  test "readonly fields are rendered as plain text, not inputs, for existing rows" do
+    get "/admin/backstage_nested_articles/#{@article.id}/edit"
+    assert_no_match 'name="backstage_nested_article[backstage_nested_extras_attributes][0][key]"',
+      response.body
   end
 
   # --- delete ---
@@ -121,21 +115,16 @@ class NestedTest < ActionDispatch::IntegrationTest
     assert_not BackstageNestedExtra.exists?(@extra1.id)
   end
 
-  # --- add new ---
+  # --- add new (Bug 1: template approach, not static DOM row) ---
 
-  test "edit page renders an empty add row" do
+  test "edit page renders an Add button and a template element, not a static new row" do
     get "/admin/backstage_nested_articles/#{@article.id}/edit"
-    # Should have at least one input with no value for adding a new record
-    assert_match "data-nested-new-row", response.body
+    assert_match "data-nested-add", response.body
+    assert_match "data-nested-template", response.body
+    assert_no_match "data-nested-new-row", response.body
   end
 
-  test "submitting the empty add row with values creates a new nested record" do
-    # Use a config with no readonly_fields so both key and value are writable
-    config = Backstage::AutoDiscovery.build(BackstageNestedArticle)
-    config.nested :backstage_nested_extras, fields: [:key, :value]
-    Backstage.registry = Backstage::Registry.new
-    Backstage.registry.register("BackstageNestedArticle", config)
-
+  test "submitting a new record via numeric index creates the nested record" do
     assert_difference "BackstageNestedExtra.count", 1 do
       patch "/admin/backstage_nested_articles/#{@article.id}",
         params: {
@@ -146,5 +135,32 @@ class NestedTest < ActionDispatch::IntegrationTest
           }
         }
     end
+  end
+
+  # --- Bug 2: readonly fields must appear as inputs in the new-row template ---
+
+  test "new-row template includes readonly fields as inputs so new records can be fully populated" do
+    get "/admin/backstage_nested_articles/#{@article.id}/edit"
+    # Find the template section — key is readonly but must still be present as an input in the template
+    template_html = response.body[/data-nested-template.*?<\/template>/m]
+    assert_not_nil template_html, "expected a data-nested-template element"
+    assert_match "[key]", template_html
+  end
+
+  # --- Bug 3: readonly nested fields must be permitted so new records save correctly ---
+
+  test "submitting a new nested record with a readonly field saves the readonly field value" do
+    # Config has key as readonly (display-only on existing rows), but new records need to set it
+    assert_difference "BackstageNestedExtra.count", 1 do
+      patch "/admin/backstage_nested_articles/#{@article.id}",
+        params: {
+          backstage_nested_article: {
+            backstage_nested_extras_attributes: {
+              "2" => {key: "newkey", value: "newval"}
+            }
+          }
+        }
+    end
+    assert_equal "newkey", BackstageNestedExtra.order(:id).last.key
   end
 end

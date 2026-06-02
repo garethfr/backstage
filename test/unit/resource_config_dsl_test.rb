@@ -181,6 +181,16 @@ class ResourceConfigDslTest < ActiveSupport::TestCase
     end
   end
 
+  # --- belongs_to readonly: ---
+
+  test "belongs_to with readonly: true marks the edit field as readonly" do
+    with_dsl("article.rb" => "Backstage.resource(:Article) { |c| c.belongs_to :tag, readonly: true }") do
+      config = Backstage.registry.resource_for("Article")
+      fk_field = config.edit_fields.find { |f| f.name == :tag_id }
+      assert fk_field.readonly?
+    end
+  end
+
   private
 
   def with_dsl(files)

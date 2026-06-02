@@ -26,12 +26,23 @@
                  })
           })
         })
-        document.querySelectorAll("[data-nested-destroy]").forEach(function(btn) {
-          btn.addEventListener("click", function() {
-            var row = btn.closest("tr")
-            row.querySelector("[data-nested-destroy-flag]").value = "1"
+        document.addEventListener("click", function(e) {
+          var destroyBtn = e.target.closest("[data-nested-destroy]")
+          if (destroyBtn) {
+            var row = destroyBtn.closest("tr")
+            var flag = row.querySelector("[data-nested-destroy-flag]")
+            if (flag) flag.value = "1"
             row.hidden = true
-          })
+          }
+          var addBtn = e.target.closest("[data-nested-add]")
+          if (addBtn) {
+            var table = addBtn.closest("table")
+            var tmpl = table.querySelector("[data-nested-template]")
+            var index = parseInt(tmpl.dataset.nextIndex, 10)
+            tmpl.dataset.nextIndex = index + 1
+            var html = tmpl.innerHTML.replace(/__INDEX__/g, index)
+            addBtn.closest("tr").insertAdjacentHTML("beforebegin", html)
+          }
         })
       })
     </script>
