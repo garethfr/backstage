@@ -7,6 +7,15 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.16] — 2026-06-02
+
+### Fixed
+
+- Nested table now uses a `<template>` element instead of a static new row, so unsaved blank rows are never submitted unintentionally
+- New-row template includes readonly fields as plain inputs so new records can be fully populated via the Add button
+- Readonly nested fields are now permitted in Strong Parameters, so new records with readonly fields save correctly
+- `belongs_to :assoc, readonly: true` now propagates `readonly:` to the generated FK field
+
 ## [0.1.15] — 2026-05-27
 
 ### Added
