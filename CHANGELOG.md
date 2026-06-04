@@ -7,6 +7,17 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.17] — 2026-06-04
+
+### Added
+
+- Flash notice is displayed after a successful create or update
+
+### Fixed
+
+- Edit and new forms now render validation error messages inline when save fails
+- Successful update now redirects back to the edit page instead of the index
+
 ## [0.1.16] — 2026-06-02
 
 ### Fixed
