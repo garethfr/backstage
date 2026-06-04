@@ -40,7 +40,8 @@ module Backstage
     def create
       @record = @resource_config.model_class.new(record_params)
       if @record.save
-        redirect_to edit_resource_path(resource: params[:resource], id: @record.id)
+        redirect_to edit_resource_path(resource: params[:resource], id: @record.id),
+          notice: "#{@resource_config.model_class.model_name.human} was successfully created."
       else
         render :new, status: :unprocessable_entity
       end
@@ -48,7 +49,8 @@ module Backstage
 
     def update
       if @record.update(record_params)
-        redirect_to resources_path(resource: params[:resource])
+        redirect_to edit_resource_path(resource: params[:resource], id: @record.id),
+          notice: "#{@resource_config.model_class.model_name.human} was successfully saved."
       else
         render :edit, status: :unprocessable_entity
       end

@@ -80,7 +80,7 @@ class NestedTest < ActionDispatch::IntegrationTest
           }
         }
       }
-    assert_redirected_to "/admin/backstage_nested_articles"
+    assert_redirected_to "/admin/backstage_nested_articles/#{@article.id}/edit"
     assert_equal "mobile", @extra1.reload.value
   end
 
@@ -111,7 +111,7 @@ class NestedTest < ActionDispatch::IntegrationTest
           }
         }
       }
-    assert_redirected_to "/admin/backstage_nested_articles"
+    assert_redirected_to "/admin/backstage_nested_articles/#{@article.id}/edit"
     assert_not BackstageNestedExtra.exists?(@extra1.id)
   end
 

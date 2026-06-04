@@ -21,9 +21,21 @@ class ResourcesNewTest < ActionDispatch::IntegrationTest
     assert_redirected_to "/admin/articles/#{article.id}/edit"
   end
 
+  test "create with valid params sets a success flash notice" do
+    post "/admin/articles", params: {article: {title: "New Article"}}
+    assert_not_nil flash[:notice]
+    assert_match(/created/i, flash[:notice])
+  end
+
   test "create with invalid params re-renders new with 422" do
     post "/admin/articles", params: {article: {title: ""}}
     assert_response :unprocessable_entity
     assert_match "new", response.body.downcase
+  end
+
+  test "create with invalid params shows model error messages" do
+    post "/admin/articles", params: {article: {title: ""}}
+    assert_response :unprocessable_entity
+    assert_match(/can&#39;t be blank/i, response.body)
   end
 end

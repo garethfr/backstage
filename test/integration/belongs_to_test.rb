@@ -76,7 +76,7 @@ class BelongsToTest < ActionDispatch::IntegrationTest
   test "update saves the foreign key" do
     patch "/admin/backstage_bt_posts/#{@post.id}",
       params: {backstage_bt_post: {backstage_bt_author_id: @author2.id}}
-    assert_redirected_to "/admin/backstage_bt_posts"
+    assert_redirected_to "/admin/backstage_bt_posts/#{@post.id}/edit"
     assert_equal @author2.id, @post.reload.backstage_bt_author_id
   end
 

@@ -74,7 +74,7 @@ class HasManyTest < ActionDispatch::IntegrationTest
   test "update adds association" do
     patch "/admin/backstage_hm_articles/#{@article.id}",
       params: {backstage_hm_article: {backstage_hm_tag_ids: [@tag2.id]}}
-    assert_redirected_to "/admin/backstage_hm_articles"
+    assert_redirected_to "/admin/backstage_hm_articles/#{@article.id}/edit"
     assert_includes @article.reload.backstage_hm_tags.map(&:name), "Rails"
   end
 end

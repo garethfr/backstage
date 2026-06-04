@@ -26,4 +26,11 @@ class LayoutTest < ActionDispatch::IntegrationTest
     assert_match "backstage", response.body
     assert_match "stylesheet", response.body
   end
+
+  test "layout renders flash notice when present" do
+    article = Article.create!(title: "Flash Test")
+    patch "/admin/articles/#{article.id}", params: {article: {title: "Updated"}}
+    follow_redirect!
+    assert_match(/saved/i, response.body)
+  end
 end

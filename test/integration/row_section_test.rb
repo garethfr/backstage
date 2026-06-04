@@ -75,21 +75,21 @@ class RowSectionTest < ActionDispatch::IntegrationTest
   test "update saves a field nested inside a row" do
     build_config { |c| c.row(:title, :body) }
     patch "/admin/articles/#{@article.id}", params: {article: {title: "Row Updated"}}
-    assert_redirected_to "/admin/articles"
+    assert_redirected_to "/admin/articles/#{@article.id}/edit"
     assert_equal "Row Updated", @article.reload.title
   end
 
   test "update saves a field nested inside a section" do
     build_config { |c| c.section("Details") { c.field(:title) } }
     patch "/admin/articles/#{@article.id}", params: {article: {title: "Section Updated"}}
-    assert_redirected_to "/admin/articles"
+    assert_redirected_to "/admin/articles/#{@article.id}/edit"
     assert_equal "Section Updated", @article.reload.title
   end
 
   test "update saves a field in a row nested inside a section" do
     build_config { |c| c.section("Details") { c.row(:title, :body) } }
     patch "/admin/articles/#{@article.id}", params: {article: {title: "Nested Row Updated"}}
-    assert_redirected_to "/admin/articles"
+    assert_redirected_to "/admin/articles/#{@article.id}/edit"
     assert_equal "Nested Row Updated", @article.reload.title
   end
 

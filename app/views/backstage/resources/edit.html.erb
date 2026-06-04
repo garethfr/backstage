@@ -4,6 +4,15 @@
 <div<% if sidebar&.links&.any? %> class="edit-layout"<% end %>>
   <div>
     <%= form_with model: @record, url: resource_path(resource: params[:resource], id: @record.id), method: :patch do |f| %>
+      <% if @record.errors.any? %>
+        <div class="error-messages">
+          <ul>
+            <% @record.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
       <% @resource_config.edit_fields.each do |field| %>
         <% if field.container? %>
           <%= render partial: field.partial_path, locals: { f: f, field: field, record: @record } %>
