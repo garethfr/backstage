@@ -7,6 +7,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.19] — 2026-07-18
+
+### Fixed
+
+- Mobile nav hamburger toggle was unclickable while the nav was open (the open overlay covered the button), so it could never be closed again
+
 ## [0.1.18] — 2026-07-18
 
 ### Added
