@@ -16,6 +16,14 @@
             }
           })
         })
+        var navToggle = document.querySelector("[data-nav-toggle]")
+        var nav = document.querySelector("nav.backstage-nav")
+        if (navToggle && nav) {
+          navToggle.addEventListener("click", function() {
+            var open = nav.classList.toggle("nav-open")
+            navToggle.setAttribute("aria-expanded", open)
+          })
+        }
         document.querySelectorAll("[data-multi-select-search]").forEach(function(input) {
           input.addEventListener("input", function() {
             var q = input.value.toLowerCase()
@@ -49,9 +57,10 @@
   </head>
   <body>
     <header>
+      <button type="button" data-nav-toggle aria-label="Menu" aria-expanded="false">☰</button>
       <%= link_to "Admin Home", backstage.root_path %>
     </header>
-    <nav>
+    <nav class="backstage-nav">
       <ul>
         <% nav_resources.each do |config| %>
           <li><%= link_to config.model_class.model_name.human.pluralize,
