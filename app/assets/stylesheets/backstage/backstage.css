@@ -16,7 +16,7 @@ nav ul li { display: block; }
   body { grid-template-columns: 1fr; }
   main { grid-column: 1; }
 
-  [data-nav-toggle] { display: inline-block; }
+  [data-nav-toggle] { display: inline-block; position: relative; z-index: 101; }
 
   nav.backstage-nav {
     display: none;

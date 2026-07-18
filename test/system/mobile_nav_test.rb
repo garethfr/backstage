@@ -10,6 +10,10 @@ class MobileNavTest < ApplicationSystemTestCase
     find("[data-nav-toggle]").click
 
     assert_selector "nav.backstage-nav", visible: true
+
+    find("[data-nav-toggle]").click
+
+    assert_no_selector "nav.backstage-nav", visible: true
   end
 
   test "nav is visible without a toggle on desktop widths" do
