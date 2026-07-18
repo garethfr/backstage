@@ -7,6 +7,16 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.18] — 2026-07-18
+
+### Added
+
+- Responsive admin layout: left nav collapses behind a hamburger toggle and overlays the page below 768px; edit-page sidebar reflows below the form on narrow viewports
+
+### Changed
+
+- Test dummy app now uses Propshaft to serve assets (fixes CSS not loading in system tests)
+
 ## [0.1.17] — 2026-06-04
 
 ### Added
