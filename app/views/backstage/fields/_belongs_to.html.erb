@@ -1,6 +1,6 @@
-<% assoc   = field.association
-   records = assoc.associated_class.all
-   col     = assoc.display_column %>
+<% assoc    = field.association
+   col      = assoc.display_column
+   records  = assoc.associated_class.order(assoc.order) %>
 <%= f.select field.name,
              records.map { |r| [r.public_send(col), r.id] },
              { include_blank: true },

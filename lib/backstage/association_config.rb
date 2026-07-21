@@ -24,6 +24,10 @@ module Backstage
       class_name.constantize
     end
 
+    def order
+      options[:order] || display_column
+    end
+
     def image_col
       options[:image_col] || :url
     end

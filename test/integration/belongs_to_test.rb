@@ -80,6 +80,25 @@ class BelongsToTest < ActionDispatch::IntegrationTest
     assert_equal @author2.id, @post.reload.backstage_bt_author_id
   end
 
+  test "select options are ordered alphabetically by display_column by default" do
+    BackstageBtAuthor.create!(name: "Abe")
+    get "/admin/backstage_bt_posts/#{@post.id}/edit"
+    # Abe should appear before Alice and Bob in the select
+    assert response.body.index("Abe") < response.body.index("Alice"),
+      "Expected options sorted by name but Abe did not appear before Alice"
+    assert response.body.index("Alice") < response.body.index("Bob"),
+      "Expected options sorted by name but Alice did not appear before Bob"
+  end
+
+  test "belongs_to select respects explicit order: option" do
+    post_config = Backstage::AutoDiscovery.build(BackstageBtPost)
+    post_config.belongs_to :backstage_bt_author, display_column: :name, order: :created_at
+    Backstage.registry.register("BackstageBtPost", post_config)
+    get "/admin/backstage_bt_posts/#{@post.id}/edit"
+    assert_match "Alice", response.body
+    assert_match "Bob", response.body
+  end
+
   test "belongs_to does not append to index_fields when fields has been called explicitly" do
     post_config = Backstage::AutoDiscovery.build(BackstageBtPost)
     post_config.fields(:title)
