@@ -7,6 +7,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.20] — 2026-07-21
+
+### Fixed
+
+- `belongs_to` select menus now sort options by `display_column` by default instead of returning records in arbitrary database order. An explicit `order:` option can override the default (e.g. `c.belongs_to :country, display_column: :printable_name, order: :printable_name`).
+
 ## [0.1.19] — 2026-07-18
 
 ### Fixed
